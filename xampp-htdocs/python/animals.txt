@@ -1,0 +1,15 @@
+cat
+dog
+platypus
+zebra
+elephant
+girrafe
+lion
+tiger
+donkey
+horse
+trout
+dolphin
+shark
+alligator
+crocodile
