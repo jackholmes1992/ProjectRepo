@@ -18,9 +18,9 @@ def htmlTail():
             </html>""")
 
 def merge():
-    print("Merging .wav files")
+    print("Merging .wav files... <br />")
     os.system("./sox -M PropellerEngine.wav Skid.wav 111111.wav ")
-    print("Files merged!")
+    print("...Files merged! <br />")
 
 #main program
 if __name__ == "__main__":
