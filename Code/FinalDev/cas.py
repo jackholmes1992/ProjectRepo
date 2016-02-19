@@ -6,6 +6,7 @@ import wave
 import pyaudio
 import sys
 
+# Thread fuction for play
 def play_audio():
     chunk = 1024
     wf = wave.open('wav.wav', 'rb')
@@ -32,8 +33,9 @@ def play_audio():
     stream.stop_stream()
     stream.close()
     p.terminate()
+    print("closing play thread")
 
-
+# Thread fuction for play
 def record_audio():
     CHUNK = 1024
     FORMAT = pyaudio.paInt16
@@ -50,8 +52,9 @@ def record_audio():
     frames = []
     print ("starting recording...")
     for i in range(0, int(RATE / CHUNK * 2)):
-        data = stream.read(CHUNK)
-        frames.append(data)
+        if is_recording: #to stop recording
+            data = stream.read(CHUNK)
+            frames.append(data)
     print ("finished recording")
 
     stream.stop_stream()
@@ -70,10 +73,10 @@ def playButton():
         global is_playing
         global my_thread
 
-        if not is_playing:
-            is_playing = True
-            my_thread = threading.Thread(target=play_audio)
-            my_thread.start()
+        #if not is_playing:
+        is_playing = True
+        my_thread = threading.Thread(target=play_audio)
+        my_thread.start()
     except ValueError:
         pass
 
@@ -95,7 +98,7 @@ def recordButton():
         if not is_recording:
             is_recording = True
             record_thread = threading.Thread(target=record_audio)
-            record_thread.start()   
+            record_thread.start()
     except ValueError:
         pass
 
@@ -120,16 +123,15 @@ root = Tk()
 root.title("Collaborative Audio System")
 
 #root.geometry("400x300")
-
+# Setup Tk mainframe
 mainframe = ttk.Frame(root, padding="4 4 12 12")
 mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
 mainframe.columnconfigure(0, weight=1)
 mainframe.rowconfigure(0, weight=1)
 
 
-
+# Treeview for showing takes
 tree = ttk.Treeview(mainframe)
-
 tree["columns"]=("one","two")
 tree['show'] = 'headings' #hides first column
 tree.column("one", width=100 )
@@ -137,13 +139,12 @@ tree.column("two", width=100)
 tree.heading("one", text="coulmn A")
 tree.heading("two", text="column B")
 
-
 tree.insert("" , 0,    text="Line 1", values=("1A","1b"))
- 
+
 id2 = tree.insert("", 1, "dir2", text="Dir 2")
 tree.insert(id2, "end", "dir 2", text="sub dir 2", values=("2A","2B"))
 
-
+# Setup buttons
 #ttk.Treeview(mainframe).grid(column=0, row=0, sticky=E)
 tree.grid(column=3, row=0, sticky=E)
 ttk.Button(mainframe, text="Play", command=playButton).grid(column=3, row=2, sticky=E)
